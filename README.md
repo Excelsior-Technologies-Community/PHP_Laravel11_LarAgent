@@ -1,66 +1,334 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PHP_Laravel11_LarAgent
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Project Description
 
-## About Laravel
+PHP_Laravel11_LarAgent is a Laravel 11 project that integrates LarAgent, a powerful AI assistant package for Laravel.
+It allows developers to create custom AI agents that can respond to messages, perform tasks, and integrate AI features directly into Laravel applications.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+With LarAgent, AI functionality can be added just like creating Laravel models or controllers.
+It supports multiple AI providers like OpenAI, Gemini, Claude, Groq, Ollama, and more.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+1. Multi-Provider Support – Works with OpenAI, Gemini, Claude, Groq, Ollama, etc.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. Safe & Cached Responses – Handles errors, rate limits, and caches replies.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3. Tools Integration – Agents can have built-in helper tools like server time.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. Configurable – Centralized AI settings in config/laragent.php.
 
-## Laravel Sponsors
+5. JSON API Ready – Returns structured responses for front-end or API use.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+6. Laravel Friendly – Agents behave like normal Laravel classes, easy to call from routes or controllers.
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
-## Contributing
+## Technologies Used
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. PHP 8.2 – Backend programming language
 
-## Code of Conduct
+2. Laravel 11 – Modern PHP framework for web applications
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+3. MySQL – Database (optional, for persistence)
 
-## Security Vulnerabilities
+4. Composer – Dependency management
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+5. LarAgent – AI agent package for Laravel
 
-## License
+6. OpenAI API – AI provider for generating responses
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+7. Blade – Laravel templating engine for views
+
+8. JSON – API response format for chat responses
+
+9. Cache – Laravel caching for AI response optimization
+
+---
+
+
+
+## Installation Steps
+
+
+---
+
+
+## STEP 1: Create Laravel 11 Project
+
+### Open terminal / CMD and run:
+
+```
+composer create-project laravel/laravel PHP_Laravel11_LarAgent "11.*"
+
+```
+
+### Go inside project:
+
+```
+cd PHP_Laravel11_LarAgent
+
+```
+
+#### Explanation:
+
+Creates a fresh Laravel 11 project and navigates into the project folder. This is the base for your LarAgent setup.
+
+
+
+## STEP 2: Database Setup (Optional)
+
+### Update database details:
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel11_LarAgent
+DB_USERNAME=root
+DB_PASSWORD=
+
+```
+
+### Create database in MySQL / phpMyAdmin:
+
+```
+Database name: laravel11_LarAgent
+
+```
+
+#### Explanation:
+
+Configures Laravel to connect with MySQL. You can create the database laravel11_LarAgent in phpMyAdmin.
+
+
+
+
+
+
+## STEP 3: Install LarAgent Package
+
+### LarAgent is a Laravel package that lets you define AI agents like Laravel models. Install it with Composer:
+
+```
+composer require maestroerror/laragent --ignore-platform-reqs
+
+```
+
+### After installing, publish the config:
+
+```
+php artisan vendor:publish --tag="laragent-config"
+
+```
+
+### That creates a config/laragent.php file you can edit
+
+```
+'providers' => [
+    'default' => [
+        'label' => 'openai',
+        'api_key' => env('OPENAI_API_KEY'),
+        'driver' => \LarAgent\Drivers\OpenAi\OpenAiDriver::class,
+        'default_truncation_threshold' => 50000,
+        'default_max_completion_tokens' => 10000,
+        'default_temperature' => 1,
+    ],
+
+```
+
+
+#### Explanation:
+
+Installs LarAgent package and publishes its configuration file config/laragent.php where you define providers, drivers, and AI settings.
+
+
+
+
+
+
+## STEP 4: Set Your OpenAI API Key
+
+#### OpenAI or any compatible API is required for the agents to work.
+
+### In your .env:
+
+```
+OPENAI_API_KEY=your_openai_api_key_here
+
+```
+
+#### Explanation:
+
+The API key allows LarAgent to communicate with OpenAI or any compatible AI provider.
+
+
+
+
+
+## STEP 5: Create Agent
+
+### Run:
+
+```
+php artisan make:agent ChatAgent
+
+```
+
+### Open: app/AiAgents/ChatAgent.php
+
+```
+<?php
+
+namespace App\AiAgents;
+
+use LarAgent\Agent;
+use LarAgent\Attributes\Tool;
+use Illuminate\Support\Facades\Cache;
+use OpenAI\Exceptions\RateLimitException;
+
+class ChatAgent extends Agent
+{
+    protected $model = "gpt-3.5-turbo";
+    protected $history = "in_memory";
+    protected $provider = "default";
+
+    public function instructions(): string
+    {
+        return "You are a helpful AI assistant in a Laravel application.";
+    }
+
+    public function prompt($message): string
+    {
+        return "User says: " . $message;
+    }
+
+    #[Tool('Current server time')]
+    public function timeTool()
+    {
+        return now()->toDateTimeString();
+    }
+
+    /**
+     * Safe respond method with caching & fallback
+     */
+    public function safeRespond($message)
+    {
+        $cacheKey = 'chat_response_' . md5($message);
+
+        return Cache::remember($cacheKey, 60, function () use ($message) {
+            try {
+                // Attempt real OpenAI response
+                return $this->respond($message);
+            } catch (RateLimitException $e) {
+                // If rate limit hit, return fallback
+                return [
+                    'message' => " OpenAI rate limit reached. Showing test response instead.",
+                    'meta' => ['provider' => 'openai', 'model' => 'gpt-3.5-turbo'],
+                    'timeTool' => now()->toDateTimeString()
+                ];
+            } catch (\Exception $e) {
+                // Any other error
+                return [
+                    'message' => " Unable to process request. Showing test response.",
+                    'meta' => ['provider' => 'openai', 'model' => 'gpt-3.5-turbo'],
+                    'timeTool' => now()->toDateTimeString()
+                ];
+            }
+        });
+    }
+}
+
+```
+
+#### Explanation:
+
+This is your custom AI agent class. Here you define AI instructions, prompts, and optional tools like time or string manipulation.
+
+
+
+
+## STEP 6: Define Route
+
+### routes/web.php:
+
+```
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\AiAgents\ChatAgent;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// Chat route with caching & safe response
+Route::get('/chat/{message}', function ($message) {
+    $agent = ChatAgent::for("default_chat");
+    $response = $agent->safeRespond($message);
+
+    return response()->json($response);
+});
+
+```
+
+#### Explanation:
+
+Creates a route to test your agent. Access /chat/{message} to get AI responses in JSON format.
+
+
+
+
+## STEP 7: Test Project
+
+### Run Server
+
+```
+php artisan serve
+
+```
+
+### Then open in browser:
+
+```
+http://127.0.0.1:8000/chat/Hello
+
+```
+
+#### Explanation:
+
+Starts the Laravel server.
+
+Visiting /chat/Hello will call your ChatAgent and return a structured AI response.
+
+
+## Expected Output:
+
+
+<img width="1919" height="907" alt="Screenshot 2026-03-03 181133" src="https://github.com/user-attachments/assets/9e2ad5b4-67f6-4562-b900-6202ff6561b0" />
+
+
+
+---
+
+# Project Folder Structure:
+
+```
+PHP_Laravel11_LarAgent/
+├── app/
+│   └── AiAgents/
+│       └── ChatAgent.php
+├── config/
+│   └── laragent.php
+├── routes/
+│   └── web.php
+├── resources/
+│   └── views/
+│       └── welcome.blade.php
+├── .env
+├── artisan
+├── composer.json
+└── public/
+
+```
