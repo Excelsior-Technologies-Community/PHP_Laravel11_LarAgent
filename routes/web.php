@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Facades\Route;
 use App\AiAgents\ChatAgent;
+use App\Http\Controllers\ChatController;
+use App\Models\ChatMessage;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Chat route with caching & safe response
-Route::get('/chat/{message}', function ($message) {
-    $agent = ChatAgent::for("default_chat");
-    $response = $agent->safeRespond($message);
+Route::get('/chat/{message}', [ChatController::class, 'chat']);
 
-    return response()->json($response);
+Route::get('/chat-history', function () {
+    return ChatMessage::latest()->take(20)->get();
 });
