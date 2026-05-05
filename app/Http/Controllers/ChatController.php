@@ -9,10 +9,10 @@ class ChatController extends Controller
 {
     public function chat(Request $request, $message)
     {
-        // ✅ session-based AI memory
+        // session-based AI memory
         $sessionId = $request->session()->getId();
 
-        // ❌ DO NOT inject wrong constructor
+        // DO NOT inject wrong constructor
         $agent = new ChatAgent($sessionId);
 
         return response()->json(

@@ -59,24 +59,24 @@ Use tools when required.";
 
             $lower = strtolower($message);
 
-            // ✅ FORCE TOOL: TIME
+            // FORCE TOOL: TIME
             if (str_contains($lower, 'time')) {
                 $response = $this->timeTool();
             }
 
-            // ✅ FORCE TOOL: UPPERCASE
+            // FORCE TOOL: UPPERCASE
             elseif (str_contains($lower, 'uppercase')) {
                 preg_match('/uppercase (.*)/i', $message, $matches);
                 $text = $matches[1] ?? '';
                 $response = $this->toUpper(['text' => $text]);
             }
 
-            // 🤖 NORMAL AI RESPONSE
+            // NORMAL AI RESPONSE
             else {
                 $response = $this->respond($message);
             }
 
-            // 💾 SAVE DB
+            // SAVE DB
             ChatMessage::create([
                 'user_message' => $message,
                 'ai_response' => is_array($response) ? json_encode($response) : $response,
