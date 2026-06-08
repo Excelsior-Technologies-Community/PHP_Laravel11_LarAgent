@@ -45,20 +45,17 @@ class ChatAgent extends Agent
             $response = null;
             $usedTool = false;
             $toolUsed = null;
-            
-            // TIME tool
+
             if (str_contains($lower, 'time') || str_contains($lower, 'clock') || str_contains($lower, 'date')) {
                 $response = now()->format('l, F j, Y g:i A');
                 $usedTool = true;
                 $toolUsed = 'getCurrentTime';
-            }
-            
-            // TEXT TRANSFORM tool
+            } 
             elseif (str_contains($lower, 'uppercase') || str_contains($lower, 'lowercase') || 
                     str_contains($lower, 'capitalize') || str_contains($lower, 'reverse')) {
                 preg_match('/(uppercase|lowercase|capitalize|reverse)\s+(.*)/i', $message, $matches);
-                $action = strtolower($matches[1] ?? 'uppercase');
-                $text = $matches[2] ?? '';
+                $action = strtolower($matches ?? 'uppercase');
+                $text = $matches ?? '';
                 
                 if (empty($text)) {
                     $response = "Please provide text to {$action}. Example: '{$action} hello world'";
@@ -73,13 +70,11 @@ class ChatAgent extends Agent
                 }
                 $usedTool = true;
                 $toolUsed = 'transformText';
-            }
-            
-            // CALCULATOR tool
+            } 
             elseif (preg_match('/(\d+)\s*([\+\-\*\/x])\s*(\d+)/', $message, $mathMatches)) {
-                $a = floatval($mathMatches[1]);
-                $op = $mathMatches[2];
-                $b = floatval($mathMatches[3]);
+                $a = floatval($mathMatches);
+                $op = $mathMatches;
+                $b = floatval($mathMatches);
                 
                 $response = match($op) {
                     '+' => $a + $b,
@@ -91,23 +86,19 @@ class ChatAgent extends Agent
                 };
                 $usedTool = true;
                 $toolUsed = 'calculate';
-            }
-            
-            // RANDOM NUMBER tool
+            } 
             elseif (str_contains($lower, 'random') && str_contains($lower, 'number')) {
                 preg_match('/random\s+number\s+(\d+)\s+to\s+(\d+)/i', $message, $randMatches);
-                $min = isset($randMatches[1]) ? intval($randMatches[1]) : 1;
-                $max = isset($randMatches[2]) ? intval($randMatches[2]) : 100;
+                $min = isset($randMatches) ? intval($randMatches) : 1;
+                $max = isset($randMatches) ? intval($randMatches) : 100;
                 $randomNum = rand($min, $max);
                 $response = "Random number between {$min} and {$max}: {$randomNum}";
                 $usedTool = true;
                 $toolUsed = 'randomNumber';
-            }
-            
-            // WEATHER tool
+            } 
             elseif (str_contains($lower, 'weather')) {
                 preg_match('/weather in (\w+)/i', $message, $weatherMatches);
-                $city = isset($weatherMatches[1]) ? ucfirst(strtolower($weatherMatches[1])) : 'Unknown';
+                $city = isset($weatherMatches) ? ucfirst(strtolower($weatherMatches)) : 'Unknown';
                 
                 $weatherData = [
                     'New York' => ['temp' => '22°C', 'condition' => 'Sunny', 'humidity' => '45%'],
@@ -121,9 +112,7 @@ class ChatAgent extends Agent
                 $response = "Weather in {$city}: {$weather['temp']}, {$weather['condition']}, Humidity: {$weather['humidity']}";
                 $usedTool = true;
                 $toolUsed = 'getWeather';
-            }
-            
-            // QUOTE tool
+            } 
             elseif (str_contains($lower, 'quote') || str_contains($lower, 'inspire')) {
                 $quotes = [
                     "The only limit to our realization of tomorrow is our doubts of today. - Franklin D. Roosevelt",
@@ -135,9 +124,7 @@ class ChatAgent extends Agent
                 $response = $quotes[array_rand($quotes)];
                 $usedTool = true;
                 $toolUsed = 'getQuote';
-            }
-            
-            // JOKE tool
+            } 
             elseif (str_contains($lower, 'joke') || str_contains($lower, 'funny')) {
                 $jokes = [
                     "Why don't scientists trust atoms? Because they make up everything!",
@@ -149,9 +136,7 @@ class ChatAgent extends Agent
                 $response = $jokes[array_rand($jokes)];
                 $usedTool = true;
                 $toolUsed = 'getJoke';
-            }
-            
-            // GREETING
+            } 
             elseif (str_contains($lower, 'hello') || str_contains($lower, 'hi ') || $lower === 'hi') {
                 $greetings = [
                     "Hello! 👋 How can I help you today?",
@@ -160,9 +145,7 @@ class ChatAgent extends Agent
                     "Greetings! 🌟 How may I help?",
                 ];
                 $response = $greetings[array_rand($greetings)];
-            }
-            
-            // DEFAULT AI RESPONSE
+            } 
             else {
                 try {
                     $response = $this->respond($message);
@@ -171,12 +154,12 @@ class ChatAgent extends Agent
                 }
             }
             
-            // Calculate response time
             $responseTime = (microtime(true) - $this->startTime) * 1000;
             
-            // Save to database
+            $status = (stripos($message, 'delete') !== false || stripos($message, 'drop') !== false) ? 'pending' : 'approved';
+
             try {
-                ChatMessage::create([
+                $chat = ChatMessage::create([
                     'session_id' => $this->sessionId,
                     'ip_address' => $ipAddress ?? request()->ip(),
                     'user_message' => $message,
@@ -186,16 +169,19 @@ class ChatAgent extends Agent
                     'response_time_ms' => round($responseTime, 2),
                     'used_tool' => $usedTool,
                     'tool_name' => $toolUsed,
+                    'status' => $status,
+                    'is_approved' => ($status === 'approved'),
+                    'token_usage' => 50,
+                    'model_name' => $this->model,
                     'metadata' => [
                         'user_agent' => request()->userAgent(),
                         'timestamp' => now()->toIso8601String(),
                     ],
                 ]);
             } catch (\Exception $e) {
-                Log::warning('Failed to save message to database: ' . $e->getMessage());
+                Log::warning('Failed to save message: ' . $e->getMessage());
             }
             
-            // Clear stats cache
             Cache::forget('chat_stats');
             
             return [
@@ -207,20 +193,17 @@ class ChatAgent extends Agent
                     'provider' => $this->provider,
                     'model' => $this->model,
                     'response_time_ms' => round($responseTime, 2),
+                    'approval_status' => $status
                 ],
                 'time' => now()->toDateTimeString()
             ];
             
         } catch (\Throwable $e) {
-            Log::error('ChatAgent Error: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString(),
-                'message' => $message
-            ]);
+            Log::error('ChatAgent Error: ' . $e->getMessage());
             
             return [
                 'status' => 'error',
                 'message' => "I encountered an error. Please try again.",
-                'error' => config('app.debug') ? $e->getMessage() : null,
                 'meta' => [
                     'provider' => $this->provider,
                     'model' => $this->model,

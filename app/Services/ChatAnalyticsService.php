@@ -13,13 +13,14 @@ class ChatAnalyticsService
             return [
                 'total_messages' => ChatMessage::count(),
                 'total_users' => ChatMessage::distinct('session_id')->count('session_id'),
-                'today_messages' => ChatMessage::today()->count(),
-                'tools_used' => ChatMessage::withTools()->count(),
+                'today_messages' => ChatMessage::whereDate('created_at', today())->count(),
+                'pending_approvals' => ChatMessage::where('status', 'pending')->count(),
+                'total_tokens' => ChatMessage::sum('token_usage'),
                 'avg_response_time' => round(ChatMessage::avg('response_time_ms') ?? 0, 2),
-                'top_provider' => ChatMessage::selectRaw('provider, count(*) as count')
-                    ->groupBy('provider')
+                'top_model' => ChatMessage::selectRaw('model_name, count(*) as count')
+                    ->groupBy('model_name')
                     ->orderByDesc('count')
-                    ->first()?->provider ?? 'N/A',
+                    ->first()?->model_name ?? 'N/A',
             ];
         });
     }
@@ -31,10 +32,9 @@ class ChatAnalyticsService
             ->get()
             ->map(fn($msg) => [
                 'id' => $msg->id,
-                'user_message' => $msg->getUserMessagePreviewAttribute(),
-                'ai_response' => $msg->getFormattedAiResponseAttribute(),
-                'used_tool' => $msg->used_tool,
-                'tool_name' => $msg->tool_name,
+                'user_message' => $msg->user_message,
+                'status' => $msg->status,
+                'tokens' => $msg->token_usage,
                 'time' => $msg->created_at->diffForHumans(),
             ])
             ->toArray();

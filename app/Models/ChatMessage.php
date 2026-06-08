@@ -56,4 +56,8 @@ class ChatMessage extends Model
             ? substr($this->user_message, 0, 50) . '...' 
             : $this->user_message;
     }
+    public function humanApprovals()
+{
+    return $this->hasMany(HumanApproval::class);
+}
 }
